@@ -656,7 +656,101 @@ I will critically evaluate the specified plan using Momus, the ruthless plan rev
 Provide a plan file path to review, or I'll review the most recent plan in `.sisyphus/plans/`.
 CMD_EOF
 
-echo -e "${GREEN}✓ Installed 7 slash commands${NC}"
+# Prometheus Command
+cat > "$CLAUDE_CONFIG_DIR/commands/prometheus.md" << 'CMD_EOF'
+---
+description: Start strategic planning with Prometheus
+---
+
+[PROMETHEUS PLANNING MODE]
+
+$ARGUMENTS
+
+## Strategic Planning with Prometheus
+
+You are now in a planning session with Prometheus, the strategic planning consultant.
+
+### How This Works
+
+1. **Interview Phase**: I will ask clarifying questions to fully understand your requirements
+2. **Analysis Phase**: I'll consult with Metis to identify hidden requirements and risks
+3. **Planning Phase**: When you're ready, I'll create a comprehensive work plan
+
+### Trigger Planning
+
+Say any of these when you're ready to generate the plan:
+- "Make it into a work plan!"
+- "Create the plan"
+- "I'm ready to plan"
+- "Generate the plan"
+
+### Plan Storage
+
+Plans are saved to `.sisyphus/plans/` for later execution with `/sisyphus`.
+
+### What Makes a Good Plan
+
+- Clear requirements summary
+- Concrete acceptance criteria
+- Specific implementation steps with file references
+- Risk identification and mitigations
+- Verification steps
+
+---
+
+Tell me about what you want to build or accomplish. I'll ask questions to understand the full scope before creating a plan.
+CMD_EOF
+
+# Orchestrator Command
+cat > "$CLAUDE_CONFIG_DIR/commands/orchestrator.md" << 'CMD_EOF'
+---
+description: Activate Orchestrator-Sisyphus for complex multi-step tasks
+---
+
+[ORCHESTRATOR MODE]
+
+$ARGUMENTS
+
+## Orchestrator-Sisyphus Activated
+
+You are now running with Orchestrator-Sisyphus, the master coordinator for complex multi-step tasks.
+
+### Capabilities
+
+1. **Todo Management**: Break down complex tasks into atomic, trackable todos
+2. **Smart Delegation**: Route tasks to the most appropriate specialist agent
+3. **Progress Tracking**: Monitor completion status and handle blockers
+4. **Verification**: Ensure all tasks are truly complete before finishing
+
+### Agent Routing
+
+| Task Type | Delegated To |
+|-----------|--------------|
+| Visual/UI work | frontend-engineer |
+| Complex analysis/debugging | oracle |
+| Documentation | document-writer |
+| Quick searches | explore |
+| Research/docs lookup | librarian |
+| Image/screenshot analysis | multimodal-looker |
+
+### Notepad System
+
+Learnings and discoveries are recorded in `.sisyphus/notepads/` to prevent repeated mistakes.
+
+### Verification Protocol
+
+Before marking any task complete:
+- Check file existence
+- Run tests if applicable
+- Type check if TypeScript
+- Code review for quality
+
+---
+
+Describe the complex task you need orchestrated. I'll break it down and coordinate the specialists.
+CMD_EOF
+
+echo -e "${GREEN}✓ Installed 9 slash commands${NC}"
 
 echo -e "${BLUE}[5/5]${NC} Creating CLAUDE.md with Sisyphus system prompt..."
 
@@ -696,6 +790,8 @@ Use the Task tool to delegate to specialized agents:
 | `/analyze <target>` | Deep analysis and investigation |
 | `/plan <description>` | Start planning session with Prometheus |
 | `/review [plan-path]` | Review a plan with Momus |
+| `/prometheus <task>` | Strategic planning with interview workflow |
+| `/orchestrator <task>` | Complex multi-step task coordination |
 
 ## Planning Workflow
 

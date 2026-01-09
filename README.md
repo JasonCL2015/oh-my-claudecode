@@ -55,7 +55,9 @@ The installer adds to your Claude Code config (`~/.claude/`):
 │   ├── deepsearch.md       # /deepsearch command
 │   ├── analyze.md          # /analyze command
 │   ├── plan.md             # /plan command (Prometheus)
-│   └── review.md           # /review command (Momus)
+│   ├── review.md           # /review command (Momus)
+│   ├── prometheus.md       # /prometheus command
+│   └── orchestrator.md     # /orchestrator command
 └── CLAUDE.md               # Sisyphus system prompt
 ```
 
@@ -78,6 +80,8 @@ claude
 | `/analyze <target>` | Deep analysis and investigation |
 | `/plan <description>` | Start planning session with Prometheus |
 | `/review [plan-path]` | Review a plan with Momus |
+| `/prometheus <task>` | Strategic planning with interview workflow |
+| `/orchestrator <task>` | Complex multi-step task coordination |
 
 ### Examples
 
@@ -206,7 +210,7 @@ Or manually:
 
 ```bash
 rm ~/.claude/agents/{oracle,librarian,explore,frontend-engineer,document-writer,multimodal-looker,momus,metis,orchestrator-sisyphus,sisyphus-junior,prometheus}.md
-rm ~/.claude/commands/{sisyphus,sisyphus-default,ultrawork,deepsearch,analyze,plan,review}.md
+rm ~/.claude/commands/{sisyphus,sisyphus-default,ultrawork,deepsearch,analyze,plan,review,prometheus,orchestrator}.md
 ```
 
 ## SDK Usage (Advanced)
@@ -321,7 +325,7 @@ The original oh-my-opencode used multiple AI providers. This port uses Claude mo
 |---------|-------------|
 | **11 Specialized Agents** | Oracle, Librarian, Explore, Frontend Engineer, Document Writer, Multimodal Looker, Momus, Metis, Orchestrator-Sisyphus, Sisyphus-Junior, Prometheus |
 | **Magic Keywords** | `ultrawork`, `search`, `analyze` trigger enhanced modes |
-| **Slash Commands** | `/sisyphus`, `/sisyphus-default`, `/ultrawork`, `/deepsearch`, `/analyze`, `/plan`, `/review` |
+| **Slash Commands** | `/sisyphus`, `/sisyphus-default`, `/ultrawork`, `/deepsearch`, `/analyze`, `/plan`, `/review`, `/prometheus`, `/orchestrator` |
 | **Configuration System** | JSONC config with multi-source merging |
 | **Context Injection** | Auto-loads CLAUDE.md and AGENTS.md files |
 | **Continuation Enforcement** | System prompt enforces task completion |
