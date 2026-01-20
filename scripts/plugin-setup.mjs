@@ -39,8 +39,8 @@ import { join } from "node:path";
 async function main() {
   const home = homedir();
 
-  // 1. Try plugin cache first (npm package: oh-my-claude-sisyphus)
-  const pluginCacheBase = join(home, ".claude/plugins/cache/oh-my-claude-sisyphus/oh-my-claude-sisyphus");
+  // 1. Try plugin cache first (marketplace: omc, plugin: oh-my-claudecode)
+  const pluginCacheBase = join(home, ".claude/plugins/cache/omc/oh-my-claudecode");
   if (existsSync(pluginCacheBase)) {
     try {
       const versions = readdirSync(pluginCacheBase);
@@ -59,6 +59,8 @@ async function main() {
   const devPaths = [
     join(home, "Workspace/oh-my-claude-sisyphus/dist/hud/index.js"),
     join(home, "workspace/oh-my-claude-sisyphus/dist/hud/index.js"),
+    join(home, "Workspace/oh-my-claudecode/dist/hud/index.js"),
+    join(home, "workspace/oh-my-claudecode/dist/hud/index.js"),
   ];
 
   for (const devPath of devPaths) {
