@@ -5,6 +5,105 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2026-01-27
+
+### Added
+
+#### Rate Limit Auto-Resume (Major Feature)
+Automatic session resumption when rate limits reset for users running in tmux.
+
+- **Rate Limit Monitor** (`src/features/rate-limit-wait/`)
+  - OAuth API-based rate limit status checking
+  - tmux pane detection for blocked Claude Code sessions
+  - Background daemon that polls and auto-resumes when limit clears
+  - CLI commands: `omc wait status`, `omc wait daemon start/stop`, `omc wait detect`
+
+- **Security Hardening**
+  - Secure file permissions (0600) for state/PID/log files
+  - Input validation for tmux pane IDs (prevents command injection)
+  - Text sanitization for tmux send-keys commands
+  - Log rotation (1MB limit) to prevent unbounded growth
+
+- **Smart CLI** (`src/cli/commands/wait.ts`)
+  - Zero learning curve: `omc wait` shows status and suggests next action
+  - `omc wait --start` / `--stop` shortcuts
+  - 61 tests covering real-world scenarios
+
+#### Async Hook Lifecycle Modules (5 New Hooks)
+Claude Code integration hooks for session and tool lifecycle events.
+
+- **SubagentTracker** (`src/hooks/subagent-tracker/`)
+  - Track active subagents with parent mode context
+  - File locking mechanism to prevent race conditions
+  - Bounded storage (max 100 completed agents) with eviction
+
+- **PreCompact** (`src/hooks/pre-compact/`)
+  - Preserve critical state before context compaction
+  - Auto-save important discoveries to notepad
+
+- **Setup** (`src/hooks/setup/`)
+  - Directory structure initialization on session start
+  - Periodic maintenance tasks
+
+- **PermissionRequest** (`src/hooks/permission-handler/`)
+  - Smart auto-approval for safe commands during active modes
+  - Shell metacharacter injection prevention
+  - Safe command allowlist (git, npm, tsc, eslint, pytest, etc.)
+
+- **SessionEnd** (`src/hooks/session-end/`)
+  - Record session metrics
+  - Cleanup transient state
+  - Export summaries
+
+#### Delegation Enforcement (Production-Ready)
+Configurable enforcement for orchestrator delegation behavior.
+
+- **Configuration Levels**
+  - `off`: No enforcement
+  - `warn`: Warnings for direct source file edits (default)
+  - `strict`: Block direct source file modifications
+
+- **Performance Optimizations**
+  - 30-second TTL cache for config reads (avoids sync I/O on hot path)
+  - Fixed nullish coalescing bug (`||` → `??`)
+
+- **Smart Agent Suggestions**
+  - Suggests appropriate agent based on file extension
+  - Audit logging to `.omc/logs/delegation-audit.jsonl`
+
+- **635 tests** for delegation enforcement levels
+
+### Fixed
+
+- **Shell Metacharacter Injection** (CRITICAL): Added `DANGEROUS_SHELL_CHARS` regex to reject commands with `;`, `&`, `|`, `` ` ``, `$`, `()`, `<>`, `\n`, `\\`
+- **Blanket Auto-Approval** (CRITICAL): Active modes now require BOTH `isActiveModeRunning()` AND `isSafeCommand()` checks
+- **Arbitrary File Access** (HIGH): Removed `cat`, `head`, `tail` from safe command patterns
+- **Race Condition** (HIGH): Added file locking to subagent-tracker with 5-second timeout
+- **Unbounded Memory** (HIGH): Capped `completed_agents` at 100 with oldest-first eviction
+- **Config Caching**: Added 30s TTL cache to avoid sync file reads on every tool call
+
+### Technical Details
+
+**New Files:**
+- `src/features/rate-limit-wait/` - Rate limit auto-resume feature (6 files)
+- `src/cli/commands/wait.ts` - CLI integration
+- `src/hooks/subagent-tracker/index.ts` - Subagent lifecycle tracking
+- `src/hooks/pre-compact/index.ts` - Pre-compaction state preservation
+- `src/hooks/session-end/index.ts` - Session end cleanup
+- `src/hooks/setup/index.ts` - Directory initialization
+- `src/hooks/permission-handler/index.ts` - Permission request handling
+- `scripts/*.mjs` - Standalone hook entry scripts (6 files)
+- `SECURITY-FIXES.md` - Security fix documentation
+
+**Tests Added:**
+- 61 rate-limit-wait tests (daemon, integration, monitor, tmux-detector)
+- 69 permission-handler security tests
+- 635 delegation-enforcement-levels tests
+
+**Configuration:**
+- Local: `.omc/config.json` → `delegationEnforcementLevel`
+- Global: `~/.claude/.omc-config.json` → `delegationEnforcementLevel`
+
 ## [3.6.3] - 2026-01-27
 
 ### Fixed
