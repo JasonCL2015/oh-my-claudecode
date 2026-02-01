@@ -173,12 +173,13 @@ function processKeywordDetector(input: HookInput): HookOutput {
   // Process each keyword and collect messages
   for (const keywordType of keywords) {
     switch (keywordType) {
-      case 'ralph':
+      case 'ralph': {
         // Activate ralph state which also auto-activates ultrawork
         const hook = createRalphLoopHook(directory);
         hook.startLoop(sessionId || 'cli-session', promptText);
         messages.push(RALPH_MESSAGE);
         break;
+      }
 
       case 'ultrawork':
         // Activate persistent ultrawork state
